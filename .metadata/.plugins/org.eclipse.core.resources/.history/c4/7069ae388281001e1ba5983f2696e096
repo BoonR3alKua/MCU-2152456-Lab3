@@ -1,0 +1,28 @@
+/*
+ * fsm_auto.c
+ *
+ *  Created on: Nov 13, 2023
+ *      Author: MY GEAR
+ */
+
+#include "fsm_auto.h"
+
+void fsm_auto_run() {
+	switch (key) {
+		case INIT:
+
+			setTimer1(500);
+			status AUTO_RED;
+			break;
+		case AUTO_RED:
+
+			status AUTO_YELLOW;
+			break;
+		case AUTO_YELLOW:
+
+			break;
+		case AUTO_YELLOW:
+
+			break;
+	}
+}
