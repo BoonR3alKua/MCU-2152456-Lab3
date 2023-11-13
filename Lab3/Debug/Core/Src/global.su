@@ -1,7 +1,7 @@
 global.c:16:6:display7SEG	16	static
 global.c:112:6:updateClockBuffer	4	static
 global.c:119:6:update7SEG	16	static
-global.c:151:6:writeVerticalLED	24	static
-global.c:157:6:writeHorizontalLED	24	static
-global.c:163:6:countDown	4	static
-global.c:168:6:setLightsTime	16	static
+global.c:149:6:writeVerticalLED	24	static
+global.c:155:6:writeHorizontalLED	24	static
+global.c:161:6:countDown	4	static
+global.c:166:6:setLightsTime	16	static

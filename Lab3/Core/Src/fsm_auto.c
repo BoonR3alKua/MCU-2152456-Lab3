@@ -86,6 +86,6 @@ void fsm_auto_run() {
 		updateClockBuffer();
 		update7SEG(index_led++);
 		if(index_led >= 4) index_led = 0;
-		setTimer3(10);
+		setTimer3(100);
 	}
 }
