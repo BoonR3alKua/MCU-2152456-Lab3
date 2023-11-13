@@ -17,7 +17,7 @@ int TimerForPressKey = 200;
 
 int button_flag = 0;
 
-int isButtonPressed() {
+int isButton1Pressed() {
 	if (button_flag == 1) {
 		button_flag = 0;
 		return 1;
@@ -27,7 +27,7 @@ int isButtonPressed() {
 
 void subKeyProcess() {
 	button_flag = 1;
-}
+};
 
 void getKeyInput() {
 	KeyReg0 = KeyReg1;

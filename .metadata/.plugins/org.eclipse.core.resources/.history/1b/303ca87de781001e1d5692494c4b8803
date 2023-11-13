@@ -1,0 +1,57 @@
+/*
+ * fsm_auto.c
+ *
+ *  Created on: Nov 13, 2023
+ *      Author: MY GEAR
+ */
+
+#include "fsm_auto.h"
+
+int horizontal_num;
+int vertical_num;
+
+void fsm_auto_run() {
+	switch (status) {
+		case INIT:
+			HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
+			setTimer1(horizontal_num * 100);
+			setTimer3(100);
+			status = AUTO_RED;
+			break;
+		case AUTO_RED:
+			HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
+			if(timer1_flag == 1) {
+				setTimer1(3000);
+				status = AUTO_GREEN;
+			}
+			break;
+		case AUTO_YELLOW:
+			HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_RESET);
+			if(timer1_flag == 1) {
+				setTimer1(5000);
+				status = AUTO_RED;
+			}
+			break;
+		case AUTO_GREEN:
+			HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
+			if(timer1_flag == 1) {
+				setTimer1(2000);
+				status = AUTO_YELLOW;
+			}
+			break;
+	}
+	if(timer3_flag == 1){
+		updateClockBuffer();
+		update7SEG(index_led++);
+		if(index_led >= 4) index_led = 0;
+		setTimer3(100);
+	}
+}
