@@ -28,6 +28,10 @@ extern int index_led;
 extern int horizontal_num;
 extern int vertical_num;
 
+extern int red;
+extern int yellow;
+extern int green;
+
 void updateClockBuffer();
 void update7SEG(int index);
 void display7SEG(int num);

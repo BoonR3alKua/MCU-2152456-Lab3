@@ -13,10 +13,12 @@
 #define NORMAL_STATE GPIO_PIN_SET
 #define PRESS_STATE GPIO_PIN_RESET
 
-extern int button_flag;
+extern int button1_flag;
+extern int button2_flag;
+extern int button3_flag;
 
-int isButtonPressed();
+int isButtonPressed(int button);
 
-void getKeyInput();
+void getKeyInput(int key);
 
 #endif /* INC_BUTTON_H_ */

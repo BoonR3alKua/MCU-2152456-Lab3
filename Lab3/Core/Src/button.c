@@ -8,44 +8,53 @@
 
 #include "button.h"
 
-int KeyReg0 = NORMAL_STATE;
-int KeyReg1 = NORMAL_STATE;
-int KeyReg2 = NORMAL_STATE;
+#define BUTTON_COUNT 3
 
-int KeyReg3 = NORMAL_STATE;
-int TimerForPressKey = 200;
+static int button_flags[BUTTON_COUNT] = {0, 0, 0};
+static int KeyReg[BUTTON_COUNT][4] = {
+    {NORMAL_STATE, NORMAL_STATE, NORMAL_STATE, NORMAL_STATE},
+    {NORMAL_STATE, NORMAL_STATE, NORMAL_STATE, NORMAL_STATE},
+    {NORMAL_STATE, NORMAL_STATE, NORMAL_STATE, NORMAL_STATE}
+};
+static int TimerForKeyPress = 100;
 
-int button_flag = 0;
+static const int button_ports[BUTTON_COUNT] = {BT1_GPIO_Port, BT2_GPIO_Port, BT3_GPIO_Port};
+static const int button_pins[BUTTON_COUNT] = {BT1_Pin, BT2_Pin, BT3_Pin};
 
-int isButton1Pressed() {
-	if (button_flag == 1) {
-		button_flag = 0;
-		return 1;
-	}
-	return 0;
+int isButtonPressed(int button){
+    if(button < 1 || button > BUTTON_COUNT) return 0;
+    if(button_flags[button - 1]){
+        button_flags[button - 1] = 0;
+        return 1;
+    }
+    return 0;
 }
 
-void subKeyProcess() {
-	button_flag = 1;
-};
+void subKeyProcess(int button){
+    if(button < 1 || button > BUTTON_COUNT) return;
+    button_flags[button - 1] = 1;
+}
 
-void getKeyInput() {
-	KeyReg0 = KeyReg1;
-	KeyReg1 = KeyReg2;
-	KeyReg2 = HAL_GPIO_ReadPin(BT1_GPIO_Port, BT1_Pin);
+void getKeyInput(int key){
+    if(key < 1 || key > BUTTON_COUNT) return;
 
-	if ((KeyReg0 == KeyReg1) && (KeyReg1 == KeyReg2)) {
-		if(KeyReg3 != KeyReg2) {
-			KeyReg3 = KeyReg2;
-			if(KeyReg2 == PRESS_STATE) {
-				subKeyProcess();
-				TimerForPressKey = 200;
-			}
-		} else {
-			TimerForPressKey--;
-			if(TimerForPressKey == 0) {
-				KeyReg3 = NORMAL_STATE;
-			}
-		}
-	}
-};
+    int index = key - 1;
+    KeyReg[index][0] = KeyReg[index][1];
+    KeyReg[index][1] = KeyReg[index][2];
+    KeyReg[index][2] = HAL_GPIO_ReadPin(button_ports[index], button_pins[index]);
+
+    if((KeyReg[index][0] == KeyReg[index][1]) && (KeyReg[index][1] == KeyReg[index][2])){
+        if(KeyReg[index][3] != KeyReg[index][2]){
+            KeyReg[index][3] = KeyReg[index][2];
+            if(KeyReg[index][2] == PRESS_STATE){
+                subKeyProcess(key);
+                TimerForKeyPress = 100;
+            }
+        } else {
+            TimerForKeyPress--;
+            if(TimerForKeyPress == 0){
+                KeyReg[index][3] = NORMAL_STATE;
+            }
+        }
+    }
+}
